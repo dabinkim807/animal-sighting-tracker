@@ -1,10 +1,12 @@
 import { useState } from "react";
 
-const Form = (props) => {
+const AddSighting = (props) => {
 
-  const {initialStudent = {id: null, 
-                          firstname: "", 
-                        lastname: ""}} = props;
+  const {initialStudent = {
+    id: null, 
+    firstname: "", 
+    lastname: ""
+  }} = props;
 
 
   // This is the oroginal State with not initial student 
@@ -90,4 +92,4 @@ const Form = (props) => {
   );
 };
 
-export default Form;
+export default AddSighting;

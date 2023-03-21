@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Form from "./form";
+import AddSighting from "./addSighting";
 
-function Students() {
+function Sightings() {
   
   // this is my original state with an array of students 
   const [students, setStudents] = useState([]);
@@ -13,8 +13,8 @@ function Students() {
     fetch("http://localhost:8080/api/students")
       .then((response) => response.json())
       .then((students) => {
-            setStudents(students);
-          });
+        setStudents(students);
+      });
   }, []);
 
   const addStudent = (newStudent) => {
@@ -59,7 +59,7 @@ function Students() {
           if(student.id === editStudentId){
             //something needs to happento allow the user edit that existing student
             // At some point I need to pass the update function as props - connect this to the backend
-            return <Form initialStudent={student} saveStudent={updateStudent}/>
+            return <AddSighting initialStudent={student} saveStudent={updateStudent}/>
           } else{
             return (
               <li key={student.id}>
@@ -69,9 +69,9 @@ function Students() {
           }
         })}
       </ul>
-      <Form saveStudent={addStudent} />
+      <AddSighting saveStudent={addStudent} />
     </div>
   );
 }
 
-export default Students;
+export default Sightings;
