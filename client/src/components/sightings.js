@@ -10,7 +10,7 @@ function Sightings() {
   const [editStudentId, setEditStudentId] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/students")
+    fetch("http://localhost:8080/api/sightings")
       .then((response) => response.json())
       .then((students) => {
         setStudents(students);
