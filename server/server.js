@@ -102,7 +102,6 @@ app.put('/api/species/:speciesID', cors(), async (req, res) =>{
 	}
 	return res.end();
 });
-
 app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
   const individual_id = parseInt(req.params.individualID);
 	try {
@@ -115,7 +114,6 @@ app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
 	}
 	return res.end();
 });
-
 app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
   const sighting_id = parseInt(req.params.sightingID);
 	try {
@@ -128,6 +126,35 @@ app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
 	}
 	return res.end();
 });
+
+app.delete('/api/species/:speciesID', cors(), async (req, res) => {
+	const species_id = parseInt(req.params.speciesID);
+	try {
+		await db.query("DELETE FROM species WHERE species_id = $1", [species_id]);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
+app.delete('/api/individuals/:individualID', cors(), async (req, res) => {
+	const individual_id = parseInt(req.params.individualID);
+	try {
+		await db.query("DELETE FROM individuals WHERE individual_id = $1", [individual_id]);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
+app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
+  const sighting_id = parseInt(req.params.sightingID);
+	try {
+		await db.query("DELETE FROM sightings WHERE sighting_id = $1", [sighting_id]);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
