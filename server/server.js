@@ -145,7 +145,7 @@ app.delete('/api/individuals/:individualID', cors(), async (req, res) => {
 	}
 	return res.end();
 });
-app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
+app.delete('/api/sightings/:sightingID', cors(), async (req, res) =>{
   const sighting_id = parseInt(req.params.sightingID);
 	try {
 		await db.query("DELETE FROM sightings WHERE sighting_id = $1", [sighting_id]);
