@@ -34,7 +34,7 @@ app.get('/api/sightings', cors(), async (req, res) => {
       FROM 
         sightings si 
         JOIN individuals i ON si.individual_id = i.individual_id 
-        JOIN species s ON s.species_id = i.species_id;
+        JOIN species s ON s.species_id = i.species_id
       `
     );
     res.send(sightings);
@@ -44,29 +44,51 @@ app.get('/api/sightings', cors(), async (req, res) => {
 });
 
 app.post('/api/sightings', cors(), async (req, res) => {
-  // const newSighting = {
-  //   sightingID: req.body.sightingID,
-  //   date_sighted: req.body.date_sighted,
-  //   location: req.body.location,
-  //   healthy: req.body.healthy,
-  //   sighter_email: req.body.email,
-  //   record_created: req.body.record_created,
-  //   individualID: req.body.individualID,
-  // };
-  const result = await db.query(
-    'INSERT INTO students(firstname, lastname) VALUES($1, $2) RETURNING *',
-    [newUser.firstname, newUser.lastname],
-  );
-  console.log(result.rows[0]);
-  res.json(result.rows[0]);
-  return res.end();
+  const client = await db.connect();
+
+  try {
+    await client.query('BEGIN');
+    const insertSpecies = `
+      INSERT INTO species(common_name, scientific_name, wild_estimate, conservation_status, created)
+      VALUES($1, $2, $3, $4, NOW())
+      ON CONFLICT (scientific_name) DO UPDATE SET common_name = Excluded.common_name
+      RETURNING species_id
+    `;
+    const newSpecies = await client.query(insertSpecies, 
+      [req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status]
+    );
+
+    const insertIndividuals = `
+      INSERT INTO individuals(nickname, species_id, created) 
+      VALUES($1, $2, NOW()) 
+      ON CONFLICT (nickname, species_id) DO UPDATE SET nickname = Excluded.nickname
+      RETURNING individual_id
+    `;
+    const newIndividual = await client.query(insertIndividuals, [req.body.nickname, newSpecies.rows[0].species_id]);
+
+    const insertSightings = `
+      INSERT INTO sightings(date_sighted, location, healthy, email, created)
+      VALUES($1, $2, $3, $4, NOW())
+      ON CONFLICT (date_sighted, location, email, individual_id) DO UPDATE SET date_sighted = Excluded.date_sighted
+      RETURNING sighting_id
+    `;
+    await client.query(insertSightings, 
+      [req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, newIndividual.rows[0].individual_id]
+    );
+    await client.query('COMMIT');
+
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e
+
+  } finally {
+    client.release();
+  }
+  res.status(200).send("New sighting was added successfully");
 });
 
-// //A put request - Update a student 
-// app.put('/api/students/:studentId', cors(), async (req, res) =>{
-//   console.log(req.params);
-//   //This will be the id that I want to find in the DB - the student to be updated
-//   const studentId = req.params.studentId
+// app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
+
 //   const updatedStudent = { id: req.body.id, firstname: req.body.firstname, lastname: req.body.lastname}
 //   console.log("In the server from the url - the student id", studentId);
 //   console.log("In the server, from the react - the student to be edited", updatedStudent);
