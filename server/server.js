@@ -59,7 +59,6 @@ app.post('/api/species', cors(), async (req, res) => {
     throw e;
   } 
 });
-
 app.post('/api/individuals', cors(), async (req, res) => {
   try {
     const insertIndividuals = `
@@ -74,7 +73,6 @@ app.post('/api/individuals', cors(), async (req, res) => {
     throw e;
   } 
 });
-
 app.post('/api/sightings', cors(), async (req, res) => {
   try {
     const insertSightings = `
@@ -92,20 +90,44 @@ app.post('/api/sightings', cors(), async (req, res) => {
   } 
 });
 
+app.put('/api/species/:speciesID', cors(), async (req, res) =>{
+  const species_id = parseInt(req.params.speciesID);
+	try {
+		await db.query(
+			"UPDATE species SET common_name = $1, scientific_name = $2, wild_estimate = $3, conservation_status = $4 WHERE species_id = $5 RETURNING *", 
+			[req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status, species_id]
+		);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
 
-// app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
-//   const query = `UPDATE students SET lastname=$1, firstname=$2 WHERE id=${studentId} RETURNING *`;
-//   const values = [updatedStudent.lastname, updatedStudent.firstname];
-//   try {
-//     const updated = await db.query(query, values);
-//     console.log(updated.rows[0]);
-//     res.send(updated.rows[0]);
+app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
+  const individual_id = parseInt(req.params.individualID);
+	try {
+		await db.query(
+			"UPDATE individuals SET nickname = $1 WHERE individual_id = $2 RETURNING *", 
+			[req.body.nickname, individual_id]
+		);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
 
-//   }catch(e){
-//     console.log(e);
-//     return res.status(400).json({e})
-//   }
-// })
+app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
+  const sighting_id = parseInt(req.params.sightingID);
+	try {
+		await db.query(
+			"UPDATE sightings SET date_sighted = $1, location = $2, healthy = $3, email = $4 WHERE sighting_id = $5 RETURNING *", 
+			[req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, sighting_id]
+		);
+	} catch(e) {
+		throw e;
+	}
+	return res.end();
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
