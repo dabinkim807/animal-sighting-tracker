@@ -67,10 +67,10 @@ app.post('/api/sightings', cors(), async (req, res) => {
     const newIndividual = await client.query(insertIndividuals, [req.body.nickname, newSpecies.rows[0].species_id]);
 
     const insertSightings = `
-      INSERT INTO sightings(date_sighted, location, healthy, email, created)
-      VALUES($1, $2, $3, $4, NOW())
+      INSERT INTO sightings(date_sighted, location, healthy, email, individual_id, created)
+      VALUES($1, $2, $3, $4, $5, NOW())
       ON CONFLICT (date_sighted, location, email, individual_id) DO UPDATE SET date_sighted = Excluded.date_sighted
-      RETURNING sighting_id
+      RETURNING sightings_id
     `;
     await client.query(insertSightings, 
       [req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, newIndividual.rows[0].individual_id]
