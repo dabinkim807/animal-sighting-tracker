@@ -42,6 +42,44 @@ app.get('/api/sightings', cors(), async (req, res) => {
     return res.status(400).json({ e });
   }
 });
+app.get('/api/individuals', cors(), async (req, res) => {
+  try {
+    const { rows: individuals } = await db.query(
+      `
+      SELECT 
+        i.nickname, 
+        s.common_name, 
+        s.scientific_name, 
+        s.wild_estimate, 
+        s.conservation_status 
+      FROM 
+        individuals i 
+        JOIN species s ON s.species_id = i.species_id
+      `
+    );
+    res.send(individuals);
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
+app.get('/api/species', cors(), async (req, res) => {
+  try {
+    const { rows: species } = await db.query(
+      `
+      SELECT 
+        s.common_name, 
+        s.scientific_name, 
+        s.wild_estimate, 
+        s.conservation_status 
+      FROM 
+        species s 
+      `
+    );
+    res.send(species);
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
 
 app.post('/api/species', cors(), async (req, res) => {
   try {
