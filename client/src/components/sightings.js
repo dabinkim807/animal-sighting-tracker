@@ -24,6 +24,9 @@ function Sightings() {
     fetch("http://localhost:8080/api/sightings")
       .then((response) => response.json())
       .then((sightings) => {
+        for (let sighting of sightings) {
+          sighting.date_sighted = sighting.date_sighted.substring(0, 16);
+        }
         setSightings(sightings);
         console.log(sightings);
       });

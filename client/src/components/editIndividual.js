@@ -9,6 +9,10 @@ function EditIndividual(props) {
     e.preventDefault();
     props.setToEdit((toEdit) => ({...toEdit, nickname: e.target.value}));
   }
+  const handleSpeciesChange = (e) => {
+    e.preventDefault();
+    props.setToEdit((toEdit) => ({...toEdit, species_id: e.target.value}));
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,6 +69,14 @@ function EditIndividual(props) {
               required
               value={props.toEdit.nickname}
               onChange={handleNicknameChange}
+            />
+            <label>Species</label>
+            <input
+              type="number"
+              id="species-id"
+              required
+              value={props.toEdit.species_id}
+              onChange={handleSpeciesChange}
             />
             <button type="submit" onClick={props.onClose}>Cancel</button>
             <button type="submit" onClick={handleSubmit}>Save</button>
