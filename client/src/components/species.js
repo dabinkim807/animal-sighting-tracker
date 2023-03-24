@@ -11,9 +11,11 @@ import "moment-timezone";
 
 import { useState, useEffect } from "react";
 
+import DeleteSpecies from './deleteSpecies';
+
 
 function Species() {
-  
+
   const [species, setSpecies] = useState([]);
 
   useEffect(() => {
@@ -24,17 +26,31 @@ function Species() {
         console.log(species);
       });
   }, []);
-  
+
+  const [toDelete, setToDelete] = useState({
+    species_id: 0
+  });
+  const [delOpen, setDelOpen] = useState(false);
+
+  const handleDelOpen = (data) => {
+    setToDelete(data);
+    setDelOpen(true);
+  }
+  const handleDelClose = () => setDelOpen(false);
+
+
   return (
     <div className="table">
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Common Name</TableCell>
               <TableCell>Scientific Name</TableCell>
               <TableCell>Conservation Status</TableCell>
               <TableCell>Wild Estimate</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -43,12 +59,13 @@ function Species() {
                 key={i}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">{specie.common_name}</TableCell>
+                <TableCell component="th" scope="row">{specie.species_id}</TableCell>
+                <TableCell>{specie.common_name}</TableCell>
                 <TableCell>{specie.scientific_name}</TableCell>
                 <TableCell>{specie.conservation_status}</TableCell>
                 <TableCell>{specie.wild_estimate}</TableCell>
-                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell>
-                <TableCell><button onClick={() => handleDelOpen(event)}>delete</button></TableCell> */}
+                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell> */}
+                <TableCell><button onClick={() => handleDelOpen(specie)}>Delete</button></TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -57,6 +74,7 @@ function Species() {
 
       {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} />
       <Delete open={delOpen} onClose={handleDelClose} event={data} setEvent={setData} setDelOpen={setDelOpen} getRequest={props.getRequest} /> */}
+      <DeleteSpecies open={delOpen} onClose={handleDelClose} species={species} setSpecies={setSpecies} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
 }

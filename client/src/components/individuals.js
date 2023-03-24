@@ -45,11 +45,13 @@ function Individuals() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Common Name</TableCell>
               <TableCell>Scientific Name</TableCell>
               <TableCell>Nickname</TableCell>
               <TableCell>Conservation Status</TableCell>
               <TableCell>Wild Estimate</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,7 +60,8 @@ function Individuals() {
                 key={i}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">{individual.common_name}</TableCell>
+                <TableCell component="th" scope="row">{individual.individual_id}</TableCell>
+                <TableCell>{individual.common_name}</TableCell>
                 <TableCell>{individual.scientific_name}</TableCell>
                 <TableCell>{individual.nickname}</TableCell>
                 <TableCell>{individual.conservation_status}</TableCell>

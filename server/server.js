@@ -69,6 +69,7 @@ app.get('/api/species', cors(), async (req, res) => {
     const { rows: species } = await db.query(
       `
       SELECT 
+        s.species_id,
         s.common_name, 
         s.scientific_name, 
         s.wild_estimate, 
