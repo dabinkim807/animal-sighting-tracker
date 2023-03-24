@@ -30,9 +30,6 @@ function Species() {
   }, []);
 
   const [addOpen, setAddOpen] = useState(false);
-  const [toAdd, setToAdd] = useState({
-    species_id: 0
-  });
   const handleAddOpen = () => {
     setAddOpen(true);
   }

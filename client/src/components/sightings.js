@@ -30,10 +30,6 @@ function Sightings() {
   }, []);
 
   const [addOpen, setAddOpen] = useState(false);
-  const [toAdd, setToAdd] = useState({
-    species_id: 0
-  });
-
   const handleAddOpen = () => {
     setAddOpen(true);
   }
@@ -44,7 +40,6 @@ function Sightings() {
     sighting_id: 0
   });
   const [delOpen, setDelOpen] = useState(false);
-
   const handleDelOpen = (data) => {
     setToDelete(data);
     setDelOpen(true);

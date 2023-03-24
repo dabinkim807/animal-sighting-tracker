@@ -22,6 +22,7 @@ function EditSpecies(props) {
     e.preventDefault();
     props.setToEdit((toEdit) => ({...toEdit, conservation_status: e.target.value}));
   }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const putRequest = () => {
@@ -74,7 +75,6 @@ function EditSpecies(props) {
             <input
               type="text"
               id="common-name"
-              placeholder="Add common name"
               required
               value={props.toEdit.common_name}
               onChange={handleCommonNameChange}
@@ -83,7 +83,6 @@ function EditSpecies(props) {
             <input 
               type="text"
               id="scientific-name"
-              placeholder="Add scientific name"
               required
               value={props.toEdit.scientific_name}
               onChange={handleScientificNameChange}
