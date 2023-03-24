@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import AddSighting from "./addSighting";
 
 
-export default function Sightings() {
+function Sightings() {
   
   const [sightings, setSightings] = useState([]);
 
@@ -109,3 +109,5 @@ export default function Sightings() {
     </div>
   );
 }
+
+export default Sightings;
