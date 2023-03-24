@@ -17,7 +17,7 @@ function Species() {
   const [species, setSpecies] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/individuals")
+    fetch("http://localhost:8080/api/species")
       .then((response) => response.json())
       .then((species) => {
         setSpecies(species);
