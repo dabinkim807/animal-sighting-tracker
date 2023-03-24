@@ -28,10 +28,11 @@ app.get('/api/sightings', cors(), async (req, res) => {
         si.healthy, 
         si.email, 
         i.nickname, 
+        i.individual_id,
         s.common_name, 
         s.scientific_name, 
         s.wild_estimate, 
-        s.conservation_status 
+        s.conservation_status
       FROM 
         sightings si 
         JOIN individuals i ON si.individual_id = i.individual_id 
@@ -53,7 +54,8 @@ app.get('/api/individuals', cors(), async (req, res) => {
         s.common_name, 
         s.scientific_name, 
         s.wild_estimate, 
-        s.conservation_status 
+        s.conservation_status,
+        s.species_id
       FROM 
         individuals i 
         JOIN species s ON s.species_id = i.species_id

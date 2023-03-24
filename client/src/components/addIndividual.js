@@ -81,10 +81,11 @@ function AddIndividual(props) {
               value={newIndividual.nickname}
               onChange={handleNicknameChange}
             />
-            <label>Species</label>
+            <label>Species ID</label>
             <input
               type="number"
               id="species-id"
+              placeholder="Add species ID"
               required
               value={newIndividual.species_id}
               onChange={handleSpeciesChange}

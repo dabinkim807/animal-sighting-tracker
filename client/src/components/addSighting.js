@@ -135,10 +135,11 @@ function AddSighting(props) {
               value={newSighting.email}
               onChange={handleEmailChange}
             />
-            <label>Individual</label>
+            <label>Individual ID</label>
             <input
               type="number"
               id="individual-id"
+              placeholder="Add individual ID"
               required
               value={newSighting.individual_id}
               onChange={handleIndividualChange}
