@@ -6,10 +6,12 @@ import {useState} from "react";
 function AddIndividual(props) {
   // open={addOpen} onClose={handleAddClose} individuals={individuals} setIndividuals={setIndividuals} setOpen={setAddOpen}
   
-  const [newIndividual, setNewIndividual] = useState({
+  const defaultIndividual = {
     nickname: "",
     species_id: ""
-  })
+  }
+
+  const [newIndividual, setNewIndividual] = useState(defaultIndividual);
 
   const handleNicknameChange = (e) => {
     e.preventDefault();
@@ -42,6 +44,7 @@ function AddIndividual(props) {
           if (response !== null) {
             let n = [...props.individuals, response];
             props.setIndividuals(n);
+            setNewIndividual(defaultIndividual);
           }
         });
     }

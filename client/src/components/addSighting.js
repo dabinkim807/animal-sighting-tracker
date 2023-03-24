@@ -104,7 +104,7 @@ function AddSighting(props) {
               onChange={handleLocationChange}
             />
             <label>Healthy</label>
-            <select id="healthy" defaultValue={"true"} onChange={handleHealthChange}>
+            <select id="healthy" defaultValue="true" onChange={handleHealthChange}>
               <option value="" disabled>--Please choose an option--</option>
               <option value="true">Healthy</option>
               <option value="false">Not Healthy</option>

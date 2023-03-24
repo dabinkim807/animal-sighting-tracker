@@ -6,12 +6,14 @@ import {useState} from "react";
 function AddSpecies(props) {
   // open={addOpen} onClose={handleAddClose} species={species} setSpecies={setSpecies} setOpen={setAddOpen}
   
-  const [newSpecies, setNewSpecies] = useState({
+  const defaultSpecies = {
     common_name: "",
     scientific_name: "",
     wild_estimate: "",
     conservation_status: ""
-  })
+  }
+
+  const [newSpecies, setNewSpecies] = useState(defaultSpecies);
 
   const handleCommonNameChange = (e) => {
     e.preventDefault();
@@ -43,6 +45,7 @@ function AddSpecies(props) {
       .then((response) => {
           let n = [...props.species, {...newSpecies, species_id: response.species_id}];
           props.setSpecies(n);
+          setNewSpecies(defaultSpecies);
         });
     }
     postRequest();
@@ -95,7 +98,7 @@ function AddSpecies(props) {
               onChange={handleEstimateChange}
             />
             <label>Conservation Status</label>
-            <select id="conservation-status" defaultValue={newSpecies.conservation_status} onChange={handleStatusChange}>
+            <select id="conservation-status" defaultValue="Not Evaluated" onChange={handleStatusChange}>
               <option value="" disabled>--Please choose an option--</option>
               <option value="Not Evaluated">Not Evaluated</option>
               <option value="Data Deficient">Data Deficient</option>
