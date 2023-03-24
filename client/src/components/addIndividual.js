@@ -34,7 +34,7 @@ function AddIndividual(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("Failed to add individual. Please check species and try again.");
+          alert("There's already an individual with the same nickname and species ID. Please pick another nickname, then try again.");
           return null;
         } else {
           return response.json();

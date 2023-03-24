@@ -34,7 +34,7 @@ function EditSpecies(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("Failed to edit species. Please pick another scientific name, then try again.");
+          alert("There's already a species with the same scientific name. Please pick another scientific name, then try again.");
         } else {
           let n = [...props.species];
           for (let i = 0; i < n.length; i++) {

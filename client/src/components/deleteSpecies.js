@@ -14,7 +14,7 @@ const DeleteSpecies = (props) => {
     })
       .then((response) => {
         if (response.status === 500) {
-          alert("Delete failed");
+          alert("Failed to delete species. Please check related sightings and individuals, then try again.");
           return;
         }
         

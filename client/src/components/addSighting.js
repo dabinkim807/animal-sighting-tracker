@@ -49,7 +49,7 @@ function AddSighting(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("Failed to add sighting. Please check individuals and species, then try again.");
+          alert("There's already a sighting with the same date, location, email, and individual ID. Please pick another date/location/email, then try again.");
           return null;
         } else {
           return response.json();
