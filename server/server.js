@@ -167,7 +167,7 @@ app.put('/api/species/:speciesID', cors(), async (req, res) =>{
 			[req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status, species_id]
 		);
 	} catch(e) {
-		return res.status(500).json(e);
+		return res.status(500).send(String(e));
 	}
 	return res.status(200).end();
 });
@@ -175,11 +175,11 @@ app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
   const individual_id = parseInt(req.params.individualID);
 	try {
 		await db.query(
-			"UPDATE individuals SET nickname = $1 WHERE individual_id = $2 RETURNING *", 
-			[req.body.nickname, individual_id]
+			"UPDATE individuals SET nickname = $1, species_id = $2 WHERE individual_id = $3 RETURNING *", 
+			[req.body.nickname, req.body.species_id, individual_id]
 		);
 	} catch(e) {
-		return res.status(500).json(e);
+		return res.status(500).send(String(e));
 	}
 	return res.status(200).end();
 });
@@ -191,7 +191,7 @@ app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
 			[req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, sighting_id]
 		);
 	} catch(e) {
-		return res.status(500).json(e);
+		return res.status(500).send(String(e));
 	}
 	return res.status(200).end();
 });

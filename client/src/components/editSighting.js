@@ -38,7 +38,9 @@ function EditSighting(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("There's already a sighting with the same date, location, email, and individual ID. Please pick another date/location/email, then try again.");
+          response.text().then(function (text) {
+            alert(text);
+          });
         } else {
           let n = [...props.sightings];
           for (let i = 0; i < n.length; i++) {

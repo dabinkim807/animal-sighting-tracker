@@ -14,7 +14,7 @@ const DeleteIndividual = (props) => {
     })
       .then((response) => {
         if (response.status === 500) {
-          alert("Failed to delete individual. Please check related species and try again.");
+          alert("Failed to delete individual. Please check related sightings and try again.");
           return;
         }
         

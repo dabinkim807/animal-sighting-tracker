@@ -49,7 +49,7 @@ function AddSighting(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("There's already a sighting with the same date, location, email, and individual ID. Please pick another date/location/email, then try again.");
+          alert("Invalid individual ID. Please try again.");
           return null;
         } else {
           return response.json();

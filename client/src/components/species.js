@@ -30,7 +30,7 @@ function Species() {
   const handleAddOpen = () => {
     setAddOpen(true);
   }
-  const handleAddClose = () => setEditOpen(false);
+  const handleAddClose = () => setAddOpen(false);
 
   const [editOpen, setEditOpen] = useState(false);
   const [toEdit, setToEdit] = useState({

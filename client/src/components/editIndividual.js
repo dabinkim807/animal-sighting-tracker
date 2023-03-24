@@ -26,7 +26,9 @@ function EditIndividual(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("There's already an individual with the same nickname and species ID. Please pick another nickname, then try again.");
+          response.text().then(function (text) {
+            alert(text);
+          });
         } else {
           let n = [...props.individuals];
           for (let i = 0; i < n.length; i++) {
