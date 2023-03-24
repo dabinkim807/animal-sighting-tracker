@@ -35,6 +35,15 @@ function Sightings() {
   }
   const handleAddClose = () => setAddOpen(false);
 
+  const [editOpen, setEditOpen] = useState(false);
+  const [toEdit, setToEdit] = useState({
+    sighting_id: 0
+  });
+  const handleEditOpen = (sighting) => {
+    setToEdit(sighting);
+    setEditOpen(true);
+  }
+  const handleEditClose = () => setEditOpen(false);
 
   const [toDelete, setToDelete] = useState({
     sighting_id: 0
@@ -83,7 +92,7 @@ function Sightings() {
                 <TableCell>{String(sighting.healthy)}</TableCell>
                 <TableCell>{sighting.location}</TableCell>
                 <TableCell>{sighting.wild_estimate}</TableCell>
-                {/* <TableCell><button onClick={() => handleEditOpen(sighting)}>Edit</button></TableCell> */}
+                <TableCell><button onClick={() => handleEditOpen(sighting)}>Edit</button></TableCell>
                 <TableCell><button onClick={() => handleDelOpen(sighting)}>Delete</button></TableCell>
               </TableRow>
             ))}
@@ -94,6 +103,7 @@ function Sightings() {
       <button onClick={handleAddOpen}>Add Sighting</button>
 
       <AddSighting open={addOpen} onClose={handleAddClose} sightings={sightings} setSightings={setSightings} setOpen={setAddOpen} />
+      <EditSighting open={editOpen} onClose={handleEditClose} sightings={sightings} setSightings={setSightings} setEditOpen={setEditOpen} toEdit={toEdit} setToEdit={setToEdit} />
       <DeleteSighting open={delOpen} onClose={handleDelClose} sightings={sightings} setSightings={setSightings} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );

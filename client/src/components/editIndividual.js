@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-import {useState} from "react";
 
 function EditIndividual(props) {
   // open={editOpen} onClose={handleEditClose} individuals={individuals} setIndividuals={setIndividuals} setEditOpen={setEditOpen} toEdit={toEdit} setToEdit={setToEdit}

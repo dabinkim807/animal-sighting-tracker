@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-import {useState} from "react";
 
 function EditSpecies(props) {
   // open={editOpen} onClose={handleEditClose} species={species} setSpecies={setSpecies} setEditOpen={setEditOpen} toEdit={toEdit} setToEdit={setToEdit}

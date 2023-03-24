@@ -6,9 +6,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import Moment from "react-moment";
-import "moment-timezone";
-
 import { useState, useEffect } from "react";
 
 import AddIndividual from './addIndividual';
