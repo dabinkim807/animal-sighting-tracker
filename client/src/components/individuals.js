@@ -11,6 +11,8 @@ import "moment-timezone";
 
 import { useState, useEffect } from "react";
 
+import DeleteIndividual from './deleteIndividual';
+
 
 function Individuals() {
   
@@ -25,6 +27,18 @@ function Individuals() {
       });
   }, []);
   
+  const [toDelete, setToDelete] = useState({
+    individual_id: 0
+  });
+  const [delOpen, setDelOpen] = useState(false);
+
+  const handleDelOpen = (data) => {
+    setToDelete(data);
+    setDelOpen(true);
+  }
+  const handleDelClose = () => setDelOpen(false);
+
+
   return (
     <div className="table">
       <TableContainer component={Paper}>
@@ -49,8 +63,8 @@ function Individuals() {
                 <TableCell>{individual.nickname}</TableCell>
                 <TableCell>{individual.conservation_status}</TableCell>
                 <TableCell>{individual.wild_estimate}</TableCell>
-                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell>
-                <TableCell><button onClick={() => handleDelOpen(event)}>delete</button></TableCell> */}
+                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell> */}
+                <TableCell><button onClick={() => handleDelOpen(individual)}>Delete</button></TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -59,6 +73,7 @@ function Individuals() {
 
       {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} />
       <Delete open={delOpen} onClose={handleDelClose} event={data} setEvent={setData} setDelOpen={setDelOpen} getRequest={props.getRequest} /> */}
+      <DeleteIndividual open={delOpen} onClose={handleDelClose} individuals={individuals} setIndividuals={setIndividuals} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
 }

@@ -48,6 +48,7 @@ app.get('/api/individuals', cors(), async (req, res) => {
     const { rows: individuals } = await db.query(
       `
       SELECT 
+        i.individual_id,
         i.nickname, 
         s.common_name, 
         s.scientific_name, 
@@ -171,27 +172,27 @@ app.delete('/api/species/:speciesID', cors(), async (req, res) => {
 	try {
 		await db.query("DELETE FROM species WHERE species_id = $1", [species_id]);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 app.delete('/api/individuals/:individualID', cors(), async (req, res) => {
 	const individual_id = parseInt(req.params.individualID);
 	try {
 		await db.query("DELETE FROM individuals WHERE individual_id = $1", [individual_id]);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 app.delete('/api/sightings/:sightingID', cors(), async (req, res) =>{
   const sighting_id = parseInt(req.params.sightingID);
 	try {
 		await db.query("DELETE FROM sightings WHERE sighting_id = $1", [sighting_id]);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 
 
