@@ -6,14 +6,15 @@ import {useState} from "react";
 function AddSighting(props) {
   // open={addOpen} onClose={handleAddClose} sightings={sightings} setSightings={setSightings} setOpen={setAddOpen}
   
-  const [newSighting, setNewSighting] = useState({
+  const defaultSighting = {
     date_sighted: "",
     location: "",
     healthy: true,
     email: "",
     individual_id: "",
     species_id: ""
-  })
+  }
+  const [newSighting, setNewSighting] = useState(defaultSighting);
 
   const handleDateChange = (e) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ function AddSighting(props) {
   }
   const handleHealthChange = (e) => {
     e.preventDefault();
-    setNewSighting((newSighting) => ({...newSighting, healthy: e.target.value}));
+    setNewSighting((newSighting) => ({...newSighting, healthy: e.target.value}));    
   }
   const handleEmailChange = (e) => {
     e.preventDefault();
@@ -58,6 +59,7 @@ function AddSighting(props) {
           if (response !== null) {
             let n = [...props.sightings, response];
             props.setSightings(n);
+            setNewSighting(defaultSighting);
           }
         });
     }
@@ -101,24 +103,30 @@ function AddSighting(props) {
               value={newSighting.location}
               onChange={handleLocationChange}
             />
-            <input
+            <label>Healthy</label>
+            <select id="healthy" defaultValue={"true"} onChange={handleHealthChange}>
+              <option value="" disabled>--Please choose an option--</option>
+              <option value="true">Healthy</option>
+              <option value="false">Not Healthy</option>
+            </select> 
+            {/* <input
               type="radio"
               id="true"
               name="healthy"
               value={newSighting.healthy}
-              checked={newSighting.healthy === true}
+              checked={newSighting.healthy}
               onChange={handleHealthChange}
             />
-            <label>Healthy</label>
+            <label htmlFor="true">Healthy</label>
             <input
               type="radio"
               id="false"
               name="healthy"
               value={newSighting.healthy}
-              checked={newSighting.healthy === false}
+              checked={newSighting.healthy}
               onChange={handleHealthChange}
             />
-            <label>Not Healthy</label>
+            <label htmlFor="false">Not Healthy</label> */}
             <label>Email</label>
             <input
               type="email"
