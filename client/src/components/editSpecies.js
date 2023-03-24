@@ -33,6 +33,9 @@ function EditSpecies(props) {
         body: JSON.stringify(props.toEdit)
       })
       .then((response) => {
+        if (response.status === 500) {
+          alert("Failed to edit species. Please pick another scientific name, then try again.");
+        } else {
           let n = [...props.species];
           for (let i = 0; i < n.length; i++) {
             if (n[i].species_id === props.toEdit.species_id) {
@@ -40,6 +43,7 @@ function EditSpecies(props) {
             }
           }
           props.setSpecies(n);
+        }  
         });
     }
     putRequest();
