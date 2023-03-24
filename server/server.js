@@ -109,10 +109,20 @@ app.post('/api/individuals', cors(), async (req, res) => {
       RETURNING individual_id
     `;
     const newIndividual = await db.query(insertIndividuals, [req.body.nickname, req.body.species_id]);
-    res.json(newIndividual.rows[0]);
+    const findSpecies = await db.query("SELECT * FROM species WHERE species_id = $1", [req.body.species_id]);
+
+    const returnObj = {
+      individual_id: newIndividual.rows[0].individual_id,
+      nickname: req.body.nickname,
+      common_name: findSpecies.rows[0].common_name,
+      scientific_name: findSpecies.rows[0].scientific_name,
+      conservation_status: findSpecies.rows[0].conservation_status,
+      wild_estimate: findSpecies.rows[0].wild_estimate
+    }
+    return res.status(200).json(returnObj);
   } catch (e) {
-    throw e;
-  } 
+    return res.status(500).json(e);
+	}
 });
 app.post('/api/sightings', cors(), async (req, res) => {
   try {

@@ -11,6 +11,8 @@ import "moment-timezone";
 
 import { useState, useEffect } from "react";
 
+import AddIndividual from './addIndividual';
+import EditIndividual from './editIndividual';
 import DeleteIndividual from './deleteIndividual';
 
 
@@ -27,6 +29,17 @@ function Individuals() {
       });
   }, []);
   
+  const [addOpen, setAddOpen] = useState(false);
+  const [toAdd, setToAdd] = useState({
+    species_id: 0
+  });
+
+  const handleAddOpen = () => {
+    setAddOpen(true);
+  }
+  const handleAddClose = () => setAddOpen(false);
+
+
   const [toDelete, setToDelete] = useState({
     individual_id: 0
   });
@@ -74,8 +87,9 @@ function Individuals() {
         </Table>
       </TableContainer>
 
-      {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} />
-      <Delete open={delOpen} onClose={handleDelClose} event={data} setEvent={setData} setDelOpen={setDelOpen} getRequest={props.getRequest} /> */}
+      <button onClick={handleAddOpen}>Add Individual</button>
+
+      <AddIndividual open={addOpen} onClose={handleAddClose} individuals={individuals} setIndividuals={setIndividuals} setOpen={setAddOpen} />
       <DeleteIndividual open={delOpen} onClose={handleDelClose} individuals={individuals} setIndividuals={setIndividuals} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
