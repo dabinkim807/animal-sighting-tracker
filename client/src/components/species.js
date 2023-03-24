@@ -11,6 +11,8 @@ import "moment-timezone";
 
 import { useState, useEffect } from "react";
 
+import AddSpecies from './addSpecies';
+import EditSpecies from './editSpecies';
 import DeleteSpecies from './deleteSpecies';
 
 
@@ -27,6 +29,17 @@ function Species() {
       });
   }, []);
 
+  const [addOpen, setAddOpen] = useState(false);
+  const [toAdd, setToAdd] = useState({
+    species_id: 0
+  });
+
+  const handleAddOpen = () => {
+    setAddOpen(true);
+  }
+  const handleAddClose = () => setAddOpen(false);
+
+  
   const [toDelete, setToDelete] = useState({
     species_id: 0
   });
@@ -72,8 +85,9 @@ function Species() {
         </Table>
       </TableContainer>
 
-      {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} />
-      <Delete open={delOpen} onClose={handleDelClose} event={data} setEvent={setData} setDelOpen={setDelOpen} getRequest={props.getRequest} /> */}
+      <button onClick={handleAddOpen}>Add Species</button>
+
+      <AddSpecies open={addOpen} onClose={handleAddClose} species={species} setSpecies={setSpecies} setOpen={setAddOpen} />
       <DeleteSpecies open={delOpen} onClose={handleDelClose} species={species} setSpecies={setSpecies} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
