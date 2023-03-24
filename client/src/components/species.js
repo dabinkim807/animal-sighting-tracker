@@ -33,18 +33,25 @@ function Species() {
   const [toAdd, setToAdd] = useState({
     species_id: 0
   });
-
   const handleAddOpen = () => {
     setAddOpen(true);
   }
-  const handleAddClose = () => setAddOpen(false);
+  const handleAddClose = () => setEditOpen(false);
 
+  const [editOpen, setEditOpen] = useState(false);
+  const [toEdit, setToEdit] = useState({
+    species_id: 0
+  });
+  const handleEditOpen = (specie) => {
+    setToEdit(specie);
+    setEditOpen(true);
+  }
+  const handleEditClose = () => setEditOpen(false);
   
   const [toDelete, setToDelete] = useState({
     species_id: 0
   });
   const [delOpen, setDelOpen] = useState(false);
-
   const handleDelOpen = (data) => {
     setToDelete(data);
     setDelOpen(true);
@@ -77,7 +84,7 @@ function Species() {
                 <TableCell>{specie.scientific_name}</TableCell>
                 <TableCell>{specie.conservation_status}</TableCell>
                 <TableCell>{specie.wild_estimate}</TableCell>
-                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell> */}
+                <TableCell><button onClick={() => handleEditOpen(specie)}>Edit</button></TableCell>
                 <TableCell><button onClick={() => handleDelOpen(specie)}>Delete</button></TableCell>
               </TableRow>
             ))}
@@ -88,6 +95,7 @@ function Species() {
       <button onClick={handleAddOpen}>Add Species</button>
 
       <AddSpecies open={addOpen} onClose={handleAddClose} species={species} setSpecies={setSpecies} setOpen={setAddOpen} />
+      <EditSpecies open={editOpen} onClose={handleEditClose} species={species} setSpecies={setSpecies} setEditOpen={setEditOpen} toEdit={toEdit} setToEdit={setToEdit} />
       <DeleteSpecies open={delOpen} onClose={handleDelClose} species={species} setSpecies={setSpecies} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );

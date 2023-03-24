@@ -165,9 +165,9 @@ app.put('/api/species/:speciesID', cors(), async (req, res) =>{
 			[req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status, species_id]
 		);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
   const individual_id = parseInt(req.params.individualID);
@@ -177,9 +177,9 @@ app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
 			[req.body.nickname, individual_id]
 		);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
   const sighting_id = parseInt(req.params.sightingID);
@@ -189,9 +189,9 @@ app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
 			[req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, sighting_id]
 		);
 	} catch(e) {
-		throw e;
+		return res.status(500).json(e);
 	}
-	return res.end();
+	return res.status(200).end();
 });
 
 app.delete('/api/species/:speciesID', cors(), async (req, res) => {
