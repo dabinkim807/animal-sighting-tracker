@@ -16,7 +16,9 @@ import DeleteSighting from "./deleteSighting";
 function Sightings() {
   
   const [sightings, setSightings] = useState([]);
-  const [toDelete, setToDelete] = useState();
+  const [toDelete, setToDelete] = useState({
+    sighting_id: 0
+  });
   const [open, setOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
 
@@ -45,6 +47,7 @@ function Sightings() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Common Name</TableCell>
               <TableCell>Scientific Name</TableCell>
               <TableCell>Nickname</TableCell>
@@ -64,7 +67,8 @@ function Sightings() {
                 key={i}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">{sighting.common_name}</TableCell>
+                <TableCell component="th" scope="row">{sighting.sighting_id}</TableCell>
+                <TableCell>{sighting.common_name}</TableCell>
                 <TableCell>{sighting.scientific_name}</TableCell>
                 <TableCell>{sighting.nickname}</TableCell>
                 <TableCell><Moment format={"llll"}>{sighting.date_sighted}</Moment></TableCell>

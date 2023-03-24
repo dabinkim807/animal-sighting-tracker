@@ -49,8 +49,8 @@ const DeleteSighting = (props) => {
     <div className="delete-modal">
       <Modal open={props.open} onClose={props.onClose}>
         <Box sx={style}>          
-          <h2>Delete Event</h2> 
-          Are you sure you want to delete?
+          <h2>Delete Sighting</h2> 
+          Are you sure you want to delete sighting with id: {props.toDelete.sighting_id}?
           <button type="submit" onClick={props.onClose}>Cancel</button>
           <button type="submit" onClick={handleDelete}>Delete</button>
         </Box>
