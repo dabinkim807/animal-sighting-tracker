@@ -1,11 +1,11 @@
 import "./App.css";
-import Sightings from "./components/sightings";
+import Tabs from "./components/tabs";
 
 function App() {
   return (
     <div className="App">
       Animal Sightings Tracker
-      <Sightings />
+      <Tabs />
     </div>
   );
 }
