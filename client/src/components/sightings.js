@@ -10,15 +10,15 @@ import Moment from "react-moment";
 import "moment-timezone";
 
 import { useState, useEffect } from "react";
-import AddSighting from "./addSighting";
+import DeleteSighting from "./deleteSighting";
 
 
 function Sightings() {
   
   const [sightings, setSightings] = useState([]);
-
-  // New State to control the existing student Id that the user wants to edit
-  // const [editStudentId, setEditStudentId] = useState(null);
+  const [toDelete, setToDelete] = useState();
+  const [open, setOpen] = useState(false);
+  const [delOpen, setDelOpen] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/sightings")
@@ -29,40 +29,15 @@ function Sightings() {
       });
   }, []);
 
-  
-  // const addStudent = (newStudent) => {
-  //   //console.log(newStudent);
-  //   //postStudent(newStudent);
-  //   setStudents((students) => [...students, newStudent]);
-  // };
-
-  //A function to control the update in the parent (student component)
-
-  // const updateStudent = (savedStudent) =>{
-  //   console.log("Line 29 savedStudent", savedStudent);
-  //   // This function should update the whole list of students - 
-  //   setStudents((students) => {
-  //     const newArrayStudents = [];
-  //     for(let student of students){
-  //       if(student.id === savedStudent.id){
-  //         newArrayStudents.push(savedStudent);
-  //       } else {
-  //         newArrayStudents.push(student);
-  //       }
-  //     }
-  //     return newArrayStudents;
-  //   })
-  //   // This line is only to close the form;
-  //   setEditStudentId(null);
-  // }
-  
-  // const onEdit = (student) =>{
-  //   console.log("This is line 26 on student component", student);
-  //   const editingID = student.id;
-  //   console.log("Just the student id", student.id)
-  //   setEditStudentId(editingID);
+  // const handleEditOpen() {
 
   // }
+  const handleDelOpen = (data) => {
+    setToDelete(data);
+    setDelOpen(true);
+  }
+  const handleDelClose = () => setDelOpen(false);
+  
 
   return (
     <div className="table">
@@ -79,6 +54,8 @@ function Sightings() {
               <TableCell>Healthy</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Wild Estimate</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,16 +73,16 @@ function Sightings() {
                 <TableCell>{String(sighting.healthy)}</TableCell>
                 <TableCell>{sighting.location}</TableCell>
                 <TableCell>{sighting.wild_estimate}</TableCell>
-                {/* <TableCell><button onClick={() => handleOpen(event)}>edit</button></TableCell>
-                <TableCell><button onClick={() => handleDelOpen(event)}>delete</button></TableCell> */}
+                {/* <TableCell><button onClick={() => handleEditOpen(sighting)}>Edit</button></TableCell> */}
+                <TableCell><button onClick={() => handleDelOpen(sighting)}>Delete</button></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} />
-      <Delete open={delOpen} onClose={handleDelClose} event={data} setEvent={setData} setDelOpen={setDelOpen} getRequest={props.getRequest} /> */}
+      {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} /> */}
+      <DeleteSighting open={delOpen} onClose={handleDelClose} sightings={sightings} setSightings={setSightings} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
 }
