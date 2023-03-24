@@ -15,19 +15,19 @@ function AddSpecies(props) {
 
   const handleCommonNameChange = (e) => {
     e.preventDefault();
-    setNewSpecies((newSpecies) => ({...newSpecies, common_name:e.target.value}));
+    setNewSpecies((newSpecies) => ({...newSpecies, common_name: e.target.value}));
   }
   const handleScientificNameChange = (e) => {
     e.preventDefault();
-    setNewSpecies((newSpecies) => ({...newSpecies, scientific_name:e.target.value}));
+    setNewSpecies((newSpecies) => ({...newSpecies, scientific_name: e.target.value}));
   }
   const handleEstimateChange = (e) => {
     e.preventDefault();
-    setNewSpecies((newSpecies) => ({...newSpecies, wild_estimate:e.target.value}));
+    setNewSpecies((newSpecies) => ({...newSpecies, wild_estimate: e.target.value}));
   }
   const handleStatusChange = (e) => {
     e.preventDefault();
-    setNewSpecies((newSpecies) => ({...newSpecies, conservation_status:e.target.value}));
+    setNewSpecies((newSpecies) => ({...newSpecies, conservation_status: e.target.value}));
   }
   const handleSubmit = (e) => {
     e.preventDefault();

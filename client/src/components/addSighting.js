@@ -1,95 +1,147 @@
-import { useState } from "react";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 
-const AddSighting = (props) => {
+import {useState} from "react";
 
-  const {initialStudent = {
-    id: null, 
-    firstname: "", 
-    lastname: ""
-  }} = props;
+function AddSighting(props) {
+  // open={addOpen} onClose={handleAddClose} sightings={sightings} setSightings={setSightings} setOpen={setAddOpen}
+  
+  const [newSighting, setNewSighting] = useState({
+    date_sighted: "",
+    location: "",
+    healthy: true,
+    email: "",
+    individual_id: "",
+    species_id: ""
+  })
 
-
-  // This is the oroginal State with not initial student 
-  const [student, setStudent] = useState(initialStudent);
-
-  //create functions that handle the event of the user typing into the form
-  const handleNameChange = (event) => {
-    const firstname = event.target.value;
-    setStudent((student) => ({ ...student, firstname }));
-  };
-
-  const handleLastnameChange = (event) => {
-    const lastname = event.target.value;
-    setStudent((student) => ({ ...student, lastname }));
-  };
-
-  //A function to handle the post request
-  const postStudent = (newStudent) => {
-    return fetch("http://localhost:8080/api/students", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newStudent),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("From the post ", data);
-        props.saveStudent(data);
-      });
-  };
-
-    //A function to handle the Update request
-    const updateStudent = (existingStudent) =>{
-      return fetch(`http://localhost:8080/api/students/${existingStudent.id}`, {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json'}, 
-          body: JSON.stringify(existingStudent)
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-          console.log("From put request ", data);
-          props.saveStudent(data);
-      });
-
+  const handleDateChange = (e) => {
+    e.preventDefault();
+    setNewSighting((newSighting) => ({...newSighting, date_sighted: e.target.value}));
   }
-
+  const handleLocationChange = (e) => {
+    e.preventDefault();
+    setNewSighting((newSighting) => ({...newSighting, location: e.target.value}));
+  }
+  const handleHealthChange = (e) => {
+    e.preventDefault();
+    setNewSighting((newSighting) => ({...newSighting, healthy: e.target.value}));
+  }
+  const handleEmailChange = (e) => {
+    e.preventDefault();
+    setNewSighting((newSighting) => ({...newSighting, email: e.target.value}));
+  }
+  const handleIndividualChange = (e) => {
+    e.preventDefault();
+    setNewSighting((newSighting) => ({...newSighting, individual_id: e.target.value}));
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(student.id){
-      updateStudent(student);
-    } else{
-      postStudent(student);
+    const postRequest = () => {
+      fetch(`http://localhost:8080/api/sightings`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/JSON"
+        },
+        body: JSON.stringify(newSighting)
+      })
+      .then((response) => {
+        if (response.status === 500) {
+          alert("Failed to add sighting. Please check individuals and species, then try again.");
+          return null;
+        } else {
+          return response.json();
+        }
+      })
+      .then((response) => {
+          if (response !== null) {
+            let n = [...props.sightings, response];
+            props.setSightings(n);
+          }
+        });
     }
-    
+    postRequest();
+    props.setOpen(false);
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    height: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
   };
 
+
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
-        <label>First Name</label>
-        <input
-          type="text"
-          id="add-user-name"
-          placeholder="First Name"
-          required
-          value={student.firstname}
-          onChange={handleNameChange}
-        />
-        <label>Last Name</label>
-        <input
-          type="text"
-          id="add-user-lastname"
-          placeholder="Last Name"
-          required
-          value={student.lastname}
-          onChange={handleLastnameChange}
-        />
-      </fieldset>
-      <button type="submit">{!student.id ? "ADD": "SAVE"}</button>
-    </form>
+    <div className="main-modal">
+      <Modal open={props.open} onClose={props.onClose}>
+        <Box sx={style}>     
+          <h2>Add Sighting</h2>     
+          <form>
+            <label>Date & Time Sighted</label>
+            <input
+              type="datetime-local"
+              id="date-sighted"
+              required
+              value={newSighting.date_sighted}
+              onChange={handleDateChange}
+            />
+            <label>Location</label>
+            <input
+              type="text"
+              id="location"
+              required
+              value={newSighting.location}
+              onChange={handleLocationChange}
+            />
+            <input
+              type="radio"
+              id="true"
+              name="healthy"
+              value={newSighting.healthy}
+              checked={newSighting.healthy === true}
+              onChange={handleHealthChange}
+            />
+            <label>Healthy</label>
+            <input
+              type="radio"
+              id="false"
+              name="healthy"
+              value={newSighting.healthy}
+              checked={newSighting.healthy === false}
+              onChange={handleHealthChange}
+            />
+            <label>Not Healthy</label>
+            <label>Email</label>
+            <input
+              type="email"
+              id="email"
+              required
+              value={newSighting.email}
+              onChange={handleEmailChange}
+            />
+            <label>Individual</label>
+            <input
+              type="number"
+              id="individual-id"
+              required
+              value={newSighting.individual_id}
+              onChange={handleIndividualChange}
+            />
+            <button type="submit" onClick={props.onClose}>Cancel</button>
+            <button type="submit" onClick={handleSubmit}>Save</button>
+          </form>
+        </Box>
+      </Modal>
+    </div>
   );
-};
+}
 
 export default AddSighting;

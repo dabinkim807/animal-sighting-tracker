@@ -13,11 +13,11 @@ function AddIndividual(props) {
 
   const handleNicknameChange = (e) => {
     e.preventDefault();
-    setNewIndividual((newIndividual) => ({...newIndividual, nickname:e.target.value}));
+    setNewIndividual((newIndividual) => ({...newIndividual, nickname: e.target.value}));
   }
   const handleSpeciesChange = (e) => {
     e.preventDefault();
-    setNewIndividual((newIndividual) => ({...newIndividual, species_id:e.target.value}));
+    setNewIndividual((newIndividual) => ({...newIndividual, species_id: e.target.value}));
   }
 
   const handleSubmit = (e) => {
@@ -32,7 +32,7 @@ function AddIndividual(props) {
       })
       .then((response) => {
         if (response.status === 500) {
-          alert("Add failed");
+          alert("Failed to add individual. Please check species and try again.");
           return null;
         } else {
           return response.json();

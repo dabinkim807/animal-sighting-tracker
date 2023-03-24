@@ -10,17 +10,15 @@ import Moment from "react-moment";
 import "moment-timezone";
 
 import { useState, useEffect } from "react";
+
+import AddSighting from './addSighting';
+import EditSighting from './editSighting';
 import DeleteSighting from "./deleteSighting";
 
 
 function Sightings() {
   
   const [sightings, setSightings] = useState([]);
-  const [toDelete, setToDelete] = useState({
-    sighting_id: 0
-  });
-  const [open, setOpen] = useState(false);
-  const [delOpen, setDelOpen] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/sightings")
@@ -31,9 +29,22 @@ function Sightings() {
       });
   }, []);
 
-  // const handleEditOpen() {
+  const [addOpen, setAddOpen] = useState(false);
+  const [toAdd, setToAdd] = useState({
+    species_id: 0
+  });
 
-  // }
+  const handleAddOpen = () => {
+    setAddOpen(true);
+  }
+  const handleAddClose = () => setAddOpen(false);
+
+
+  const [toDelete, setToDelete] = useState({
+    sighting_id: 0
+  });
+  const [delOpen, setDelOpen] = useState(false);
+
   const handleDelOpen = (data) => {
     setToDelete(data);
     setDelOpen(true);
@@ -85,7 +96,9 @@ function Sightings() {
         </Table>
       </TableContainer>
 
-      {/* <AddOrEdit open={open} onClose={handleClose} event={data} setEvent={setData} setOpen={setOpen} getRequest={props.getRequest} /> */}
+      <button onClick={handleAddOpen}>Add Sighting</button>
+
+      <AddSighting open={addOpen} onClose={handleAddClose} sightings={sightings} setSightings={setSightings} setOpen={setAddOpen} />
       <DeleteSighting open={delOpen} onClose={handleDelClose} sightings={sightings} setSightings={setSightings} setDelOpen={setDelOpen} toDelete={toDelete} />
     </div>
   );
