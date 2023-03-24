@@ -89,7 +89,7 @@ function Sightings() {
                 <TableCell>{sighting.common_name}</TableCell>
                 <TableCell>{sighting.scientific_name}</TableCell>
                 <TableCell>{sighting.nickname}</TableCell>
-                <TableCell><Moment format={"llll"}>{sighting.date_sighted}</Moment></TableCell>
+                <TableCell><Moment format={"lll"}>{sighting.date_sighted}</Moment></TableCell>
                 <TableCell>{sighting.conservation_status}</TableCell>
                 <TableCell>{sighting.email}</TableCell>
                 <TableCell>{String(sighting.healthy)}</TableCell>
