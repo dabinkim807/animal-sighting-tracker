@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require("body-parser");
 const cors = require('cors');
 require('dotenv').config();
 const db = require('./db/db-connection.js');
@@ -9,70 +10,221 @@ const PORT = 8080;
 app.use(cors());
 app.use(express.json());
 
-// creates an endpoint for the route /api
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from My template ExpressJS' });
+  res.send("Hi! This is Dana's Express JS template");
 });
 
-// create the get request
-app.get('/api/students', cors(), async (req, res) => {
-  // const STUDENTS = [
-
-  //     { id: 1, firstName: 'Lisa', lastName: 'Lee' },
-  //     { id: 2, firstName: 'Eileen', lastName: 'Long' },
-  //     { id: 3, firstName: 'Fariba', lastName: 'Dadko' },
-  //     { id: 4, firstName: 'Cristina', lastName: 'Rodriguez' },
-  //     { id: 5, firstName: 'Andrea', lastName: 'Trejo' },
-  // ];
-  // res.json(STUDENTS);
+app.get('/api/sightings', cors(), async (req, res) => {
   try {
-    const { rows: students } = await db.query('SELECT * FROM students');
-    res.send(students);
+    const { rows: sightings } = await db.query(
+      `
+      SELECT 
+        si.sighting_id,
+        si.date_sighted, 
+        si.location, 
+        si.healthy, 
+        si.email, 
+        i.nickname, 
+        i.individual_id,
+        s.common_name, 
+        s.scientific_name, 
+        s.wild_estimate, 
+        s.conservation_status
+      FROM 
+        sightings si 
+        JOIN individuals i ON si.individual_id = i.individual_id 
+        JOIN species s ON s.species_id = i.species_id
+      `
+    );
+    res.send(sightings);
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
+app.get('/api/individuals', cors(), async (req, res) => {
+  try {
+    const { rows: individuals } = await db.query(
+      `
+      SELECT 
+        i.individual_id,
+        i.nickname, 
+        s.common_name, 
+        s.scientific_name, 
+        s.wild_estimate, 
+        s.conservation_status,
+        s.species_id
+      FROM 
+        individuals i 
+        JOIN species s ON s.species_id = i.species_id
+      `
+    );
+    res.send(individuals);
+  } catch (e) {
+    return res.status(400).json({ e });
+  }
+});
+app.get('/api/species', cors(), async (req, res) => {
+  try {
+    const { rows: species } = await db.query(
+      `
+      SELECT 
+        s.species_id,
+        s.common_name, 
+        s.scientific_name, 
+        s.wild_estimate, 
+        s.conservation_status 
+      FROM 
+        species s 
+      `
+    );
+    res.send(species);
   } catch (e) {
     return res.status(400).json({ e });
   }
 });
 
-// create the POST request
-app.post('/api/students', cors(), async (req, res) => {
-  const newUser = {
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-  };
-  console.log([newUser.firstname, newUser.lastname]);
-  const result = await db.query(
-    'INSERT INTO students(firstname, lastname) VALUES($1, $2) RETURNING *',
-    [newUser.firstname, newUser.lastname],
-  );
-  console.log(result.rows[0]);
-  res.json(result.rows[0]);
+app.post('/api/species', cors(), async (req, res) => {
+  try {
+    const insertSpecies = `
+      INSERT INTO species(common_name, scientific_name, wild_estimate, conservation_status, created)
+      VALUES($1, $2, $3, $4, NOW())
+      ON CONFLICT (scientific_name) DO UPDATE SET common_name = Excluded.common_name
+      RETURNING species_id
+    `;
+    const newSpecies = await db.query(insertSpecies, 
+      [req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status]
+    );
+    res.json(newSpecies.rows[0]);
+  } catch (e) {
+    throw e;
+  } 
+});
+app.post('/api/individuals', cors(), async (req, res) => {
+  try {
+    const insertIndividuals = `
+      INSERT INTO individuals(nickname, species_id, created) 
+      VALUES($1, $2, NOW()) 
+      ON CONFLICT (nickname, species_id) DO UPDATE SET nickname = Excluded.nickname
+      RETURNING individual_id
+    `;
+    const newIndividual = await db.query(insertIndividuals, [req.body.nickname, req.body.species_id]);
+    const findSpecies = await db.query("SELECT * FROM species WHERE species_id = $1", [req.body.species_id]);
+
+    const returnObj = {
+      individual_id: newIndividual.rows[0].individual_id,
+      nickname: req.body.nickname,
+      common_name: findSpecies.rows[0].common_name,
+      scientific_name: findSpecies.rows[0].scientific_name,
+      conservation_status: findSpecies.rows[0].conservation_status,
+      wild_estimate: findSpecies.rows[0].wild_estimate
+    }
+    return res.status(200).json(returnObj);
+  } catch (e) {
+    return res.status(500).json(e);
+	}
+});
+app.post('/api/sightings', cors(), async (req, res) => {
+  try {
+    const insertSightings = `
+      INSERT INTO sightings(date_sighted, location, healthy, email, individual_id, created)
+      VALUES($1, $2, $3, $4, $5, NOW())
+      ON CONFLICT (date_sighted, location, email, individual_id) DO UPDATE SET date_sighted = Excluded.date_sighted
+      RETURNING sighting_id
+    `;
+    const newSighting = await db.query(insertSightings, 
+      [req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, req.body.individual_id]
+    );
+    const findIndividuals = await db.query("SELECT * FROM individuals WHERE individual_id = $1", [req.body.individual_id]);
+    const findSpecies = await db.query("SELECT * FROM species WHERE species_id = $1", [findIndividuals.rows[0].species_id]);
+
+    const returnObj = {
+      sighting_id: newSighting.rows[0].sighting_id,
+      date_sighted: req.body.date_sighted,
+      location: req.body.location,
+      healthy: req.body.healthy,
+      email: req.body.email,
+      nickname: findIndividuals.rows[0].nickname,
+      common_name: findSpecies.rows[0].common_name,
+      scientific_name: findSpecies.rows[0].scientific_name,
+      conservation_status: findSpecies.rows[0].conservation_status,
+      wild_estimate: findSpecies.rows[0].wild_estimate
+    }
+    return res.status(200).json(returnObj);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+	}
 });
 
-//A put request - Update a student 
-app.put('/api/students/:studentId', cors(), async (req, res) =>{
-  console.log(req.params);
-  //This will be the id that I want to find in the DB - the student to be updated
-  const studentId = req.params.studentId
-  const updatedStudent = { id: req.body.id, firstname: req.body.firstname, lastname: req.body.lastname}
-  console.log("In the server from the url - the student id", studentId);
-  console.log("In the server, from the react - the student to be edited", updatedStudent);
-  // UPDATE students SET lastname = "something" WHERE id="16";
-  const query = `UPDATE students SET lastname=$1, firstname=$2 WHERE id=${studentId} RETURNING *`;
-  const values = [updatedStudent.lastname, updatedStudent.firstname];
-  try {
-    const updated = await db.query(query, values);
-    console.log(updated.rows[0]);
-    res.send(updated.rows[0]);
+app.put('/api/species/:speciesID', cors(), async (req, res) =>{
+  const species_id = parseInt(req.params.speciesID);
+	try {
+		await db.query(
+			"UPDATE species SET common_name = $1, scientific_name = $2, wild_estimate = $3, conservation_status = $4 WHERE species_id = $5 RETURNING *", 
+			[req.body.common_name, req.body.scientific_name, req.body.wild_estimate, req.body.conservation_status, species_id]
+		);
+	} catch(e) {
+		return res.status(500).send(String(e));
+	}
+	return res.status(200).end();
+});
+app.put('/api/individuals/:individualID', cors(), async (req, res) =>{
+  const individual_id = parseInt(req.params.individualID);
+	try {
+		await db.query(
+			"UPDATE individuals SET nickname = $1, species_id = $2 WHERE individual_id = $3 RETURNING *", 
+			[req.body.nickname, req.body.species_id, individual_id]
+		);
+	} catch(e) {
+		return res.status(500).send(String(e));
+	}
+	return res.status(200).end();
+});
+app.put('/api/sightings/:sightingID', cors(), async (req, res) =>{
+  const sighting_id = parseInt(req.params.sightingID);
+	try {
+		await db.query(
+			"UPDATE sightings SET date_sighted = $1, location = $2, healthy = $3, email = $4 WHERE sighting_id = $5 RETURNING *", 
+			[req.body.date_sighted, req.body.location, req.body.healthy, req.body.email, sighting_id]
+		);
+	} catch(e) {
+		return res.status(500).send(String(e));
+	}
+	return res.status(200).end();
+});
 
-  }catch(e){
-    console.log(e);
-    return res.status(400).json({e})
-  }
-})
+app.delete('/api/species/:speciesID', cors(), async (req, res) => {
+	const species_id = parseInt(req.params.speciesID);
+	try {
+		await db.query("DELETE FROM species WHERE species_id = $1", [species_id]);
+	} catch(e) {
+		return res.status(500).json(e);
+	}
+	return res.status(200).end();
+});
+app.delete('/api/individuals/:individualID', cors(), async (req, res) => {
+	const individual_id = parseInt(req.params.individualID);
+	try {
+		await db.query("DELETE FROM individuals WHERE individual_id = $1", [individual_id]);
+	} catch(e) {
+		return res.status(500).json(e);
+	}
+	return res.status(200).end();
+});
+app.delete('/api/sightings/:sightingID', cors(), async (req, res) =>{
+  const sighting_id = parseInt(req.params.sightingID);
+	try {
+		await db.query("DELETE FROM sightings WHERE sighting_id = $1", [sighting_id]);
+	} catch(e) {
+		return res.status(500).json(e);
+	}
+	return res.status(200).end();
+});
 
 
-
-// console.log that your server is up and running
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
